@@ -25,7 +25,7 @@ One vocabulary, used everywhere — in skills, references, scripts, status field
 
 - **status.json** — the single source of truth for execution state (task, status, `phases[]`, `git`, `log[]`). Mutated only by scripts.
 - **Plan.md** — the source of truth for phase/step **structure**. `parse-plan.sh` derives `status.json.phases[]` from it.
-- **Implementation_Notes.md** — research findings.
+- **Implementation_Notes.md** — research findings and planning-pressure notes.
 - **decisions.json** / **Decisions.md** — canonical decisions / rendered view.
 - **Advisory_Notes.md** — cumulative "patterns to avoid", appended after each audit; read at the start of every phase.
 - **Audit_Issues.md** — written only when a phase is BLOCKED.

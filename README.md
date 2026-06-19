@@ -41,7 +41,7 @@ Then start: `$orca plan <task>`. For the desktop app, run `$orca app-setup` to w
 ## The workflow
 
 ```
-$orca plan <task>      research (parallel subagents) → phased Plan.md → decisions → approval
+$orca plan <task>      research (parallel subagents) → planning pressure → phased Plan.md → decisions → approval
 $orca execute [P#]     per phase: implement → verify → MANDATORY subagent audit → scoped commit
 $orca resolve          fix a BLOCKED phase, then re-audit
 $orca revise           change the plan mid-flight when reality diverges

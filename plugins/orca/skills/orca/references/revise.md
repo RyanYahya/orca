@@ -8,13 +8,13 @@ Change the plan mid-flight when reality diverges from it. Use this instead of si
 
 ## Step 1 — Name the divergence
 
-State plainly what's wrong with the current plan: a step that can't work as written, a missing phase, a wrong assumption surfaced at execution, or a decision that changed. Read `Plan.md`, `status.json`, and `Decisions.md` so the change is grounded.
+State plainly what's wrong with the current plan: a step that can't work as written, a missing phase, a wrong assumption surfaced at execution, or a decision that changed. Read `Plan.md`, `status.json`, `Implementation_Notes.md`, and `Decisions.md` so the change is grounded.
 
 ## Step 2 — Edit the plan
 
 Edit `Plan.md` directly, keeping the strict phase format (`references/plan.md`). Touch only what must change:
 - New facts → update the **Assumptions** block (re-tag `[verified]`/`[untested]`).
-- Changed choices → `bash .orca/scripts/add-decision.sh add "..." "..."` (and `answer` once decided); never edit `Decisions.md` by hand.
+- Changed choices → run the planning stress-test from `references/plan.md` for the changed portion; append material findings under `## Planning Pressure`; use `bash .orca/scripts/add-decision.sh add "..." "..."` (and `answer` once decided); never edit `Decisions.md` by hand.
 - Keep already-completed phases intact unless they must change; if a completed phase is invalidated, say so explicitly and confirm with the user before rewriting it.
 
 ## Step 3 — Reparse

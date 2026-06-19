@@ -60,6 +60,10 @@ bash "$SCRIPT_DIR/render-decisions.sh" >/dev/null
 _Populated during research. Add sections as agents complete; structure is free-form._
 
 ## Findings
+
+## Planning Pressure
+
+_Populated after research. Record load-bearing unknowns, recommended answers, and whether each was answered from code/docs, recorded as a decision, or deferred as an [untested] assumption._
 EOF
 } > "$WORKFLOW_DIR/Implementation_Notes.md"
 

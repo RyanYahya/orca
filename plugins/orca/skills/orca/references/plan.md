@@ -10,7 +10,7 @@ Run `bash .orca/scripts/lock.sh planner`. If it exits non-zero, another live dri
 
 ## If a workflow already exists
 
-Read `status.json` (task, status) and `Plan.md`. Ask the user: **continue planning** (extend/refine) or **start executing** (`$orca execute`). For continue: research the requested change, update `Plan.md`, run `bash .orca/scripts/parse-plan.sh`, re-present for approval. Then release the lock.
+Read `status.json` (task, status) and `Plan.md`. Ask the user: **continue planning** (extend/refine) or **start executing** (`$orca execute`). For continue: research the requested change, run the stress-test below for the changed portion, update `Implementation_Notes.md`/`Plan.md`/decisions as needed, run `bash .orca/scripts/parse-plan.sh`, re-present for approval. Then release the lock.
 
 ## If no workflow exists
 
@@ -31,7 +31,17 @@ Keep briefs short (each lane is a real model thread). For a tiny task, one explo
 
 Append findings to `Implementation_Notes.md` under `## Findings`, one subsection per source, each citing where it came from (`path:line`, doc URL, or lane name).
 
-### 4. Write the plan
+### 4. Stress-test
+
+Before writing phases, run a short planning-pressure pass:
+
+- Walk the design tree: goal/done-condition, scope edges, constraints, integration points, data/domain terms, verification, and failure cases.
+- If code/docs can answer an unknown, inspect them instead of asking the user. Record the answer and source under `## Planning Pressure` in `Implementation_Notes.md`.
+- If an unknown materially changes phase structure and cannot be discovered, ask exactly one sharp question at a time and include your recommended answer. Record the decision with `add-decision.sh`, then record the chosen answer before approval.
+- If an unknown is safe to defer, turn it into an `[untested]` assumption and make the relevant phase pre-flight check it before edits.
+- If the repo already has `CONTEXT.md`, `CONTEXT-MAP.md`, or `docs/adr/`, use those docs as planning inputs. If planning resolves a new domain term or an ADR-worthy trade-off, add an explicit phase step to update the existing docs. Do not introduce new glossary/ADR conventions unless the user asked.
+
+### 5. Write the plan
 
 Edit `Plan.md` directly — it is the source of truth for phase/step structure (`parse-plan.sh` derives `status.json.phases[]` from it).
 
@@ -58,19 +68,19 @@ Rules:
 
 Then `bash .orca/scripts/parse-plan.sh` to rebuild `status.json.phases[]` (existing `done` flags are preserved by step ID).
 
-### 5. Decisions
+### 6. Decisions
 
-For each ambiguous choice, `bash .orca/scripts/add-decision.sh add "Question" "Recommended answer"` (returns `D###`, re-renders `Decisions.md`). Never edit `Decisions.md` by hand.
+For each ambiguous choice that survived the stress-test, `bash .orca/scripts/add-decision.sh add "Question" "Recommended answer"` (returns `D###`, re-renders `Decisions.md`). Never edit `Decisions.md` by hand.
 
-### 6. User review
+### 7. User review
 
-Present the plan summary and pending decisions. Record answers: `bash .orca/scripts/add-decision.sh answer D001 "Chosen answer" user`. **Wait for explicit approval.**
+Present the plan summary, assumptions, and pending decisions. Resolve approval-blocking decisions one at a time; record each answer with `bash .orca/scripts/add-decision.sh answer D001 "Chosen answer" user`. **Wait for explicit approval.**
 
-### 7. Validation pass
+### 8. Validation pass
 
 After approval, re-dispatch the same specialists (via `spawn_agent`) to review the plan: does it follow current docs/APIs? anti-patterns? gotchas? Each returns `APPROVED` or `CONCERNS` with specifics. On concerns: edit `Plan.md`, re-run `parse-plan.sh`, re-present.
 
-### 8. Finalize
+### 9. Finalize
 
 ```
 jq '.status = "PENDING" | .planApproved = true' .orca/workflows/current/status.json > /tmp/orca.status && mv /tmp/orca.status .orca/workflows/current/status.json
