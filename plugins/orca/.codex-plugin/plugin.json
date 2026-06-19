@@ -1,6 +1,6 @@
 {
   "name": "orca",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Plan, phased execution, mandatory subagent audit, resolve, and archive: a disciplined Codex coding workflow with all state on disk under .orca/.",
   "author": {
     "name": "Rayyan Alyahya",

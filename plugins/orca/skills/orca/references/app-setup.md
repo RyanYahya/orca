@@ -38,7 +38,7 @@ If the Codex app exposes the `automation_update` tool, use it instead of sending
 - **Execution environment:** worktree.
 - **Schedule:** every 15 minutes during weekday working hours (or daily at 9am if the user asks for a slower cadence).
 - **Reasoning effort:** high.
-- **Prompt:** `$orca execute-headless` then: *"Advance exactly ONE pending phase of the active .orca workflow, run the mandatory subagent audit, then stop. If status.json status is COMPLETED or BLOCKED, do nothing and report that to Triage."*
+- **Prompt:** `$orca execute-headless` then: *"Advance exactly ONE pending phase of the active .orca workflow, mirror progress with update_plan if available, run the mandatory subagent audit, then stop. If status.json status is COMPLETED or BLOCKED, do nothing and report that to Triage."*
 
 When calling the tool, put the workspace, worktree environment, schedule, status, and reasoning effort in tool fields, not in the prompt. Use an active cron schedule equivalent to "every 15 minutes during weekday working hours" (for example `FREQ=MINUTELY;INTERVAL=15;BYDAY=MO,TU,WE,TH,FR;BYHOUR=9,10,11,12,13,14,15,16,17,18`) but do not show raw schedule strings to the user.
 
@@ -67,7 +67,7 @@ At plan time, create the workflow's worktree off the base branch and immediately
 
 ## Step 6 — Confirm and note the caveats
 
-Tell the user: the execute + heartbeat Automations are set; orca will advance one audited phase per tick and surface BLOCKED/COMPLETED in Triage. Caveats to state plainly:
+Tell the user: the execute + heartbeat Automations are set; orca will advance one audited phase per tick, mirror the active phase with `update_plan` when available, and surface BLOCKED/COMPLETED in Triage. Caveats to state plainly:
 
 - Automations run only while the **machine is on, the app is running, and the repo is on disk** (no cloud durability). For overnight/CI runs, use the CLI phase-runner: `bash .orca/scripts/phase-runner.sh`.
 - If Orca doesn't appear in the app's **Plugins** sidebar (known bug #16783), it still works — invoke `$orca …` from the composer.

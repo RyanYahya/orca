@@ -10,6 +10,7 @@ One vocabulary, used everywhere — in skills, references, scripts, status field
 - **decision** — an open choice recorded in `decisions.json` (`D001`, …) and rendered to `Decisions.md`. Resolved by the user.
 - **lane** — one specialist auditor in the post-phase audit (e.g. `code-auditor`). Each lane = one read-only subagent.
 - **actor** — who holds the lock: `planner`, `executor`, `auditor`, `phase-runner`, or `automation`.
+- **native task mirror** — Codex's native task list shown through `update_plan`, displaying the current workflow or phase. Display-only; regenerated from `.orca` state and never authoritative.
 
 ## The audit verdict
 

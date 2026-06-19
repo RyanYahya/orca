@@ -12,6 +12,7 @@ A pod of orcas hunts in coordination. So does orca: every phase you ship is inde
 
 - **The audit is native.** After each phase, orca spawns parallel read-only specialist subagents (`spawn_agent` / `wait` / `close_agent`, gated by the on-by-default `features.multi_agent`) to review the diff. Self-review never substitutes; a phase that fails review is **BLOCKED**, not quietly committed.
 - **State on disk, not in memory.** Everything lives under `.orca/` — `status.json` (single source of truth), `Plan.md`, decisions, audit history. Any surface (app, CLI, IDE) reads the same files.
+- **Native progress visibility.** In the Codex app, orca mirrors the active workflow/phase into native tasks so you can see whether it is pre-flighting, editing a step, verifying, auditing, committing, blocked, or complete.
 - **Desktop-app-first.** Execution runs unattended as a scheduled **Automation** on a background **Worktree**; you review and resolve in the app's Review pane and Triage.
 - **CLI escape hatch.** A `codex exec` phase-runner gives you continuous, headless, CI-friendly runs the app can't (machine-off, back-to-back, structured output).
 - **Lean by design.** Built on Matt Pocock's and OpenAI's skill-authoring doctrine: one model-invoked router skill, progressive disclosure into `references/`, mechanical steps pushed into deterministic scripts, a shared vocabulary.

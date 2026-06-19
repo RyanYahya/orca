@@ -37,6 +37,7 @@ Parse the first word after `orca` (or after `/orca:`) as the command. Read the m
 ## Invariants (hold for every command)
 
 - **State on disk.** `.orca/workflows/current/status.json` is the single source of truth. Read it; don't guess. Mutate it only through `.orca/scripts/*.sh`, never by hand.
+- **Native task visibility.** When Codex exposes `update_plan`, mirror current workflow progress there using `references/native-tasks.md`. It is display-only; `.orca` state wins.
 - **One driver at a time.** Acquire the lock with `lock.sh <actor>` before changing a workflow; release with `unlock.sh <actor>`. If any live driver holds `.orca/workflows/current/.lock`, stop and report the holder.
 - **Mandatory audit.** Every executed phase gets an independent review by parallel specialist subagents before it is committed (`references/audit.md`). Self-review never substitutes. The user invoking `execute` IS authorization to spawn subagents. If no subagent mechanism is available, BLOCK the phase — do not silently downgrade to self-review.
 - **Scoped commits.** Commit only the files a phase touched, via `commit-phase.sh`. Never blanket-commit another actor's changes.

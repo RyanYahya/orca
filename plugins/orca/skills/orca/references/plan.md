@@ -68,6 +68,8 @@ Rules:
 
 Then `bash .orca/scripts/parse-plan.sh` to rebuild `status.json.phases[]` (existing `done` flags are preserved by step ID).
 
+If `update_plan` is available, refresh the display mirror from `references/native-tasks.md` so the approved phases appear as pending native tasks.
+
 ### 6. Decisions
 
 For each ambiguous choice that survived the stress-test, `bash .orca/scripts/add-decision.sh add "Question" "Recommended answer"` (returns `D###`, re-renders `Decisions.md`). Never edit `Decisions.md` by hand.
