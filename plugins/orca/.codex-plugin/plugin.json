@@ -24,6 +24,8 @@
       "$orca execute",
       "$orca app-setup"
     ],
-    "brandColor": "#0B6E99"
+    "brandColor": "#0B6E99",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/logo.png"
   }
 }
