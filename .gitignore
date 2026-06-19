@@ -1,0 +1,10 @@
+# OS / editor cruft
+.DS_Store
+*.swp
+*~
+
+# tool caches
+.impeccable/
+
+# orca's own dogfooded workflow state, if you run orca on this repo
+.orca/workflows/current/

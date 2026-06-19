@@ -1,0 +1,6 @@
+interface:
+  display_name: "Simplify"
+  short_description: "Cleanup-only review: reuse, simplify, efficiency"
+  default_prompt: "Use $simplify to clean up the current diff without changing behavior."
+policy:
+  allow_implicit_invocation: false

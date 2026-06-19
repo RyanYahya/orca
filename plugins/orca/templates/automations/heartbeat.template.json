@@ -1,0 +1,13 @@
+{
+  "_comment": "Reference recipe for the orca 'heartbeat' Automation. Codex has no event triggers, so this poll surfaces BLOCKED/COMPLETED. Recreate in Automations -> New. Guidance: $orca app-setup.",
+  "name": "orca heartbeat",
+  "type": "standalone",
+  "scope": "this repository",
+  "schedule": {
+    "cron": "*/30 * * * *",
+    "alternatives": ["0 * * * * (hourly)", "0 9,13,17 * * * (3x/day)"]
+  },
+  "sandbox": "workspace-write",
+  "reasoningEffort": "low",
+  "prompt": "Read .orca/workflows/current/status.json. If status is BLOCKED or COMPLETED, summarize it in Triage and run: bash .orca/scripts/notify.sh '<status>: <task>'. Otherwise do nothing."
+}

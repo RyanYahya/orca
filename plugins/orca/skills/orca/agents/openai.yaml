@@ -1,0 +1,6 @@
+interface:
+  display_name: "Orca"
+  short_description: "Plan, execute, and audit coding workflows"
+  default_prompt: "Use $orca plan to start a phased, audited coding workflow for a task."
+policy:
+  allow_implicit_invocation: true

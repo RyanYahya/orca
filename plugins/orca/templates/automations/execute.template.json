@@ -1,0 +1,14 @@
+{
+  "_comment": "Reference recipe for the Codex desktop app 'execute' Automation. The app has no import API, so recreate these settings in Automations -> New. Full guidance: $orca app-setup.",
+  "name": "orca execute",
+  "type": "project",
+  "scope": "this repository",
+  "runOn": "dedicated background worktree",
+  "schedule": {
+    "cron": "*/15 9-18 * * 1-5",
+    "alternatives": ["0 9 * * * (daily 9am)", "*/10 * * * * (every 10 min)"]
+  },
+  "sandbox": "workspace-write",
+  "reasoningEffort": "high",
+  "prompt": "$orca execute-headless\n\nAdvance exactly ONE pending phase of the active .orca workflow, run the mandatory subagent audit, then stop. If status.json status is COMPLETED or BLOCKED, do nothing and report that to Triage."
+}

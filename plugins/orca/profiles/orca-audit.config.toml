@@ -1,0 +1,17 @@
+# orca audit profile (read-only)
+#
+# Install: copy to ~/.codex/orca-audit.config.toml
+# Use only for the FALLBACK orchestrated audit lanes, when you run each
+# specialist as its own process instead of via native subagents:
+#   codex exec -p orca-audit --output-schema .orca/audit.schema.json -o lane.json "<brief>"
+#
+# The primary audit path uses native subagents inside the execute turn and does
+# not need this profile.
+
+model_reasoning_effort = "medium"
+approval_policy = "never"
+sandbox_mode = "read-only"
+
+[features]
+# Audit lanes are leaves: they review, they do not spawn their own subagents.
+multi_agent = false

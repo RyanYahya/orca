@@ -1,0 +1,10 @@
+# .worktreeinclude — files Codex copies into each managed worktree even when
+# git ignores them, so a phase's verify.auto has what it needs to run.
+# Keep this short: only what verification actually requires. One glob per line.
+#
+# Copy this file to your repo root and uncomment what applies:
+#
+# .env.example
+# .env.local
+# fixtures/**
+# .codex/

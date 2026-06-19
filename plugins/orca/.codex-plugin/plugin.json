@@ -1,0 +1,29 @@
+{
+  "name": "orca",
+  "version": "0.1.0",
+  "description": "Plan, phased execution, mandatory subagent audit, resolve, and archive: a disciplined Codex coding workflow with all state on disk under .orca/.",
+  "author": {
+    "name": "Rayyan Alyahya",
+    "url": "https://github.com/RyanYahya"
+  },
+  "homepage": "https://github.com/RyanYahya/orca",
+  "repository": "https://github.com/RyanYahya/orca",
+  "license": "MIT",
+  "keywords": ["workflow", "planning", "execution", "audit", "subagents", "multi-agent", "codex", "orchestration"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Orca",
+    "shortDescription": "Plan, execute, and audit coding workflows with a pod of specialist subagents.",
+    "longDescription": "Orca runs a disciplined coding workflow on Codex: research and plan, phase-by-phase execution, a mandatory parallel subagent audit after every phase, decision resolution, and archival. State lives on disk under .orca/ and is shared across the Codex app, CLI, and IDE, so the same workflow runs unattended via desktop Automations or continuously via the CLI phase-runner.",
+    "developerName": "Rayyan Alyahya",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "websiteURL": "https://github.com/RyanYahya/orca",
+    "defaultPrompt": [
+      "$orca plan <task>",
+      "$orca execute",
+      "$orca app-setup"
+    ],
+    "brandColor": "#0B6E99"
+  }
+}

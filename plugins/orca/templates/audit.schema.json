@@ -1,0 +1,30 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["lane", "verdict", "summary", "blocking", "advisory"],
+  "properties": {
+    "lane": {
+      "type": "string",
+      "description": "The audit lane / specialist name that produced this verdict."
+    },
+    "verdict": {
+      "type": "string",
+      "enum": ["APPROVED", "ISSUES"],
+      "description": "APPROVED only when the blocking array is empty."
+    },
+    "summary": {
+      "type": "string",
+      "description": "One or two sentences summarizing the review."
+    },
+    "blocking": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Blocking issues that must be fixed before the phase is committed. Empty if none."
+    },
+    "advisory": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Non-blocking suggestions (simplicity, trace, surgical scope). Never change the verdict."
+    }
+  }
+}

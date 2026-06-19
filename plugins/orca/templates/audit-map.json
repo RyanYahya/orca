@@ -1,0 +1,5 @@
+{
+  "defaultAgents": ["code-auditor"],
+  "phases": {},
+  "rules": []
+}

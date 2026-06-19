@@ -1,0 +1,23 @@
+# orca execution profile
+#
+# Install: copy to ~/.codex/orca-exec.config.toml
+# Use:     codex exec -p orca-exec "..."   (layers on top of your base ~/.codex/config.toml)
+#
+# Tuned for autonomous phase execution with the native subagent audit.
+
+# Inherit your default model (do not pin one here). Effort is "medium", NOT
+# "minimal" — minimal reasoning 400s when image/web tools are enabled.
+model_reasoning_effort = "medium"
+
+# Non-interactive, but still sandboxed to workspace writes (not full access).
+approval_policy = "never"
+sandbox_mode = "workspace-write"
+
+[features]
+# Native in-session parallel subagents power the mandatory phase audit.
+multi_agent = true
+
+[agents]
+# Up to 6 concurrent audit lanes; auditors are leaves (no recursion).
+max_threads = 6
+max_depth = 1
