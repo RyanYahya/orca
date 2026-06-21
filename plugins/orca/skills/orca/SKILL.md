@@ -1,6 +1,6 @@
 ---
 name: orca
-description: 'Codex workflow router for "$orca": plan tasks, execute audited phases, resolve blocks, revise plans, sync AGENTS.md, manage audit agents, set up app automations, and archive .orca workflows. Use on "$orca", "/orca:", "orca <command>", or .orca workflow requests.'
+description: 'Codex workflow router for "$orca": plan tasks, execute audited phases, resolve blocks, revise plans, sync AGENTS.md, manage audit agents, prepare headless app execution, and archive .orca workflows. Use on "$orca", "/orca:", "orca <command>", or .orca workflow requests.'
 ---
 
 # Orca
@@ -28,7 +28,7 @@ Parse the first word after `orca` (or after `/orca:`) as the command. Read the m
 | `revise` | `references/revise.md` | Change the plan mid-flight when reality diverges. |
 | `docs-sync` | `references/docs-sync.md` | Update per-directory AGENTS.md from the implementation. |
 | `agent` | `references/agent.md` | Create a project specialist in `.orca/agents/`. |
-| `app-setup` | `references/app-setup.md` | Install orca into the repo + set up desktop-app Automations. |
+| `app-setup` | `references/app-setup.md` | Install orca into the repo + prepare desktop-app headless execution. |
 | `archive` | `references/archive.md` | Move the finished workflow to `archived/`. |
 
 - **Cleanup-only review:** use the separate `$simplify` skill (`$orca simplify` → just run `$simplify`). It is quality-only and never replaces the audit.
@@ -38,6 +38,8 @@ Parse the first word after `orca` (or after `/orca:`) as the command. Read the m
 
 - **State on disk.** `.orca/workflows/current/status.json` is the single source of truth. Read it; don't guess. Mutate it only through `.orca/scripts/*.sh`, never by hand.
 - **Native task visibility.** When Codex exposes `update_plan`, mirror current workflow progress there using `references/native-tasks.md`. It is display-only; `.orca` state wins.
+- **Native user input.** When Codex exposes `request_user_input`, use it for approval-blocking choices and plan/revision approval (`references/human-input.md`). `decisions.json` is the record; chat is only the fallback prompt surface.
+- **Headless automation lifecycle.** Desktop app Automations are opt-in: create or enable `orca execute` and `orca heartbeat` only from `$orca execute-headless`, and pause them when the workflow reaches `COMPLETED`.
 - **One driver at a time.** Acquire the lock with `lock.sh <actor>` before changing a workflow; release with `unlock.sh <actor>`. If any live driver holds `.orca/workflows/current/.lock`, stop and report the holder.
 - **Mandatory audit.** Every executed phase gets an independent review by parallel specialist subagents before it is committed (`references/audit.md`). Self-review never substitutes. The user invoking `execute` IS authorization to spawn subagents. If no subagent mechanism is available, BLOCK the phase — do not silently downgrade to self-review.
 - **Scoped commits.** Commit only the files a phase touched, via `commit-phase.sh`. Never blanket-commit another actor's changes.

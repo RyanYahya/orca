@@ -2,6 +2,8 @@
 
 Change the plan mid-flight when reality diverges from it. Use this instead of silently improvising during execution. Terms: `references/GLOSSARY.md`.
 
+For user decisions and material revision approval, follow `references/human-input.md`: use Codex's `request_user_input` UI when available, and fall back to chat only when the tool is unavailable.
+
 ## Step 0 — Lock
 
 `bash .orca/scripts/lock.sh planner`. If non-zero, stop and report.
@@ -14,7 +16,7 @@ State plainly what's wrong with the current plan: a step that can't work as writ
 
 Edit `Plan.md` directly, keeping the strict phase format (`references/plan.md`). Touch only what must change:
 - New facts → update the **Assumptions** block (re-tag `[verified]`/`[untested]`).
-- Changed choices → run the planning stress-test from `references/plan.md` for the changed portion; append material findings under `## Planning Pressure`; use `bash .orca/scripts/add-decision.sh add "..." "..."` (and `answer` once decided); never edit `Decisions.md` by hand.
+- Changed choices → run the planning stress-test from `references/plan.md` for the changed portion; append material findings under `## Planning Pressure`; use `bash .orca/scripts/add-decision.sh add "..." "..."`, resolve through `references/human-input.md`, then `answer` once decided; never edit `Decisions.md` by hand.
 - Keep already-completed phases intact unless they must change; if a completed phase is invalidated, say so explicitly and confirm with the user before rewriting it.
 
 ## Step 3 — Reparse
@@ -23,4 +25,4 @@ Edit `Plan.md` directly, keeping the strict phase format (`references/plan.md`).
 
 ## Step 4 — Re-present and unlock
 
-Show the diff in the plan and any new/changed decisions. Get approval for material changes. Then `bash .orca/scripts/log-event.sh planner "Plan revised: <summary>"` and `bash .orca/scripts/unlock.sh planner`. Tell the user to resume with `$orca execute`.
+Show the diff in the plan and any new/changed decisions inline, with links to the durable files. Get approval for material changes through `references/human-input.md`. Then `bash .orca/scripts/log-event.sh planner "Plan revised: <summary>"` and `bash .orca/scripts/unlock.sh planner`. Tell the user to resume with `$orca execute`.

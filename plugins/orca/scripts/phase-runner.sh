@@ -50,7 +50,7 @@ read -r -a EXTRA_FLAGS <<< "${ORCA_CODEX_FLAGS:-}"
 LOG_FILE="${ORCA_LOG_FILE:-/tmp/orca-phase-runner.log}"
 NOTIFY="$SCRIPT_DIR/notify.sh"
 
-PROMPT='Use the $orca skill and follow references/execute-headless.md exactly. Advance exactly ONE pending phase of the active .orca workflow, run the mandatory subagent audit, then stop. If status.json status is COMPLETED or BLOCKED, do nothing and report it.'
+PROMPT='Use the $orca skill and follow references/execute-headless.md exactly in CLI phase-runner mode. Advance exactly ONE pending phase of the active .orca workflow, run the mandatory subagent audit, then stop. Do not create or update Codex app Automations from this CLI run. If status.json status is COMPLETED or BLOCKED, report it and stop.'
 
 log(){ echo "[$(get_timestamp)] $1" | tee -a "$LOG_FILE"; }
 

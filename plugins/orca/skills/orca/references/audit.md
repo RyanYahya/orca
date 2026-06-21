@@ -38,7 +38,7 @@ Merge all lanes' `blocking` and `advisory` lists. The phase verdict is **ISSUES*
 # write the consolidated blocking findings to Audit_Issues.md, then:
 bash .orca/scripts/record-audit.sh <PID> --issues --issues-file .orca/workflows/current/Audit_Issues.md
 ```
-`record-audit.sh --issues` sets top-level `status = BLOCKED`. Stop here. The user (or `$orca resolve`) addresses it before the phase is committed. In an automation, the next tick sees BLOCKED and no-ops; the heartbeat automation surfaces it in Triage.
+`record-audit.sh --issues` sets top-level `status = BLOCKED`. Stop here. The user (or `$orca resolve`) addresses it before the phase is committed. In the app, the headless lifecycle pauses `orca execute` on BLOCKED; the heartbeat automation surfaces the block in Triage.
 
 **All approved:**
 - For each `advisory` the lanes raised that self-review missed: cheap → fix silently; material → surface to the user; recurring → append to `Advisory_Notes.md` under `## Patterns to avoid`.

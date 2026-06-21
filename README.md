@@ -13,7 +13,7 @@ A pod of orcas hunts in coordination. So does orca: every phase you ship is inde
 - **The audit is native.** After each phase, orca spawns parallel read-only specialist subagents (`spawn_agent` / `wait` / `close_agent`, gated by the on-by-default `features.multi_agent`) to review the diff. Self-review never substitutes; a phase that fails review is **BLOCKED**, not quietly committed.
 - **State on disk, not in memory.** Everything lives under `.orca/` — `status.json` (single source of truth), `Plan.md`, decisions, audit history. Any surface (app, CLI, IDE) reads the same files.
 - **Native progress visibility.** In the Codex app, orca mirrors the active workflow/phase into native tasks so you can see whether it is pre-flighting, editing a step, verifying, auditing, committing, blocked, or complete.
-- **Desktop-app-first.** Execution runs unattended as a scheduled **Automation** on a background **Worktree**; you review and resolve in the app's Review pane and Triage.
+- **Desktop-app-first.** Headless execution can run unattended as an opt-in scheduled **Automation** on a background **Worktree**; you review and resolve in the app's Review pane and Triage.
 - **CLI escape hatch.** A `codex exec` phase-runner gives you continuous, headless, CI-friendly runs the app can't (machine-off, back-to-back, structured output).
 - **Lean by design.** Built on Matt Pocock's and OpenAI's skill-authoring doctrine: one model-invoked router skill, progressive disclosure into `references/`, mechanical steps pushed into deterministic scripts, a shared vocabulary.
 
@@ -37,7 +37,7 @@ codex plugin add orca@orca
 bash <(curl -fsSL https://raw.githubusercontent.com/RyanYahya/orca/main/install.sh)
 ```
 
-Then start: `$orca plan <task>`. For the desktop app, run `$orca app-setup` to wire up the Automations and worktree.
+Then start: `$orca plan <task>`. For the desktop app, run `$orca app-setup` to prepare the app config/worktree; run `$orca execute-headless` when you want recurring headless execution.
 
 ## The workflow
 
@@ -56,13 +56,13 @@ Update orca natively: `codex plugin marketplace upgrade && codex plugin add orca
 
 ## Desktop-app-first
 
-Codex can't trigger on a git push (no event triggers yet), so orca drives execution on a **schedule**:
+Codex can't trigger on a git push (no event triggers yet), so headless orca drives execution on a **schedule** after you opt in with `$orca execute-headless`:
 
-- **Execute Automation** — a *project* automation on a *dedicated background worktree*, on a cron schedule, whose prompt is `$orca execute-headless`. Each tick advances exactly one audited phase; it no-ops once the workflow is `COMPLETED` or `BLOCKED`. Sandbox **must** be `workspace-write`.
-- **Heartbeat Automation** — a cheap poll that reads `status.json` and notifies when a phase goes `BLOCKED` or the workflow `COMPLETED` (compensating for the missing event triggers). Results land in **Triage**.
+- **Execute Automation** — created/enabled only by `$orca execute-headless`; a *project* automation on a *dedicated background worktree*, on a cron schedule, whose prompt is `$orca execute-headless`. Each tick advances exactly one audited phase. Sandbox **must** be `workspace-write`.
+- **Heartbeat Automation** — created/enabled only by `$orca execute-headless`; a cheap poll that reads `status.json` and notifies when a phase goes `BLOCKED` or the workflow `COMPLETED` (compensating for the missing event triggers). Results land in **Triage**.
 - **Worktree** — one per workflow, branched `orca/<task-slug>`; phases commit sequentially; merge back via the Review pane or Handoff at archive.
 
-`$orca app-setup` prints the exact recipe; templates are in `plugins/orca/templates/automations/`.
+When the workflow reaches `COMPLETED`, orca pauses the execute + heartbeat Automations. `$orca app-setup` prepares config and prints the recipe; templates are in `plugins/orca/templates/automations/`.
 
 > Automations run only while the machine is on and the app is running. For overnight/CI, use the CLI runner: `bash .orca/scripts/phase-runner.sh`. If Orca isn't in the app's Plugins sidebar (known Codex bug), `$orca …` still works from the composer.
 

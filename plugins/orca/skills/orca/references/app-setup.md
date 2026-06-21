@@ -1,6 +1,6 @@
 # orca app-setup
 
-Set orca up for the **Codex desktop app** (the primary surface): install `.orca/` into the repo, make the config the app inherits correct, then create the two Automations that drive unattended execution. Terms: `references/GLOSSARY.md`.
+Set orca up for the **Codex desktop app** (the primary surface): install `.orca/` into the repo, make the config the app inherits correct, and prepare the headless automation recipes. Terms: `references/GLOSSARY.md`.
 
 ## Step 1 — Install `.orca/` into the repo
 
@@ -29,45 +29,26 @@ max_depth = 1                       # auditors don't recurse
 
 Also ensure the project is **trusted** so project config + skills load: `[projects."<abs repo path>"] trust_level = "trusted"` in `~/.codex/config.toml`.
 
-## Step 3 — Create the EXECUTE automation (the unattended driver)
+## Step 3 — Prepare, but do not create, headless Automations
 
-If the Codex app exposes the `automation_update` tool, use it instead of sending the user through the UI. First look for an existing automation named `orca execute`; update it if found, otherwise create it. Use:
+Do **not** create `orca execute` or `orca heartbeat` during app setup. They are recurring jobs, so they should only exist after the user opts into headless execution by invoking `$orca execute-headless`.
 
-- **Kind:** cron.
-- **Workspace:** this repo.
-- **Execution environment:** worktree.
-- **Schedule:** every 15 minutes during weekday working hours (or daily at 9am if the user asks for a slower cadence).
-- **Reasoning effort:** high.
-- **Prompt:** `$orca execute-headless` then: *"Advance exactly ONE pending phase of the active .orca workflow, mirror progress with update_plan if available, run the mandatory subagent audit, then stop. If status.json status is COMPLETED or BLOCKED, do nothing and report that to Triage."*
+Keep `.orca/automations/execute.template.json` and `.orca/automations/heartbeat.template.json` available as the manual fallback recipes. The lifecycle is defined in `references/automation-lifecycle.md`:
 
-When calling the tool, put the workspace, worktree environment, schedule, status, and reasoning effort in tool fields, not in the prompt. Use an active cron schedule equivalent to "every 15 minutes during weekday working hours" (for example `FREQ=MINUTELY;INTERVAL=15;BYDAY=MO,TU,WE,TH,FR;BYHOUR=9,10,11,12,13,14,15,16,17,18`) but do not show raw schedule strings to the user.
+- `$orca execute-headless` creates or enables the two Automations when `automation_update` is available.
+- The execute Automation advances one audited phase per tick.
+- The heartbeat Automation reports `BLOCKED`/`COMPLETED`.
+- When the workflow reaches `COMPLETED`, both Automations are paused.
 
-If `automation_update` is unavailable, create it manually in the app: **Automations → New**, using `.orca/automations/execute.template.json`. It must be a project automation scoped to this repo, running on a dedicated background worktree with `workspace-write`.
+If the user asks to start unattended execution now, tell them to run `$orca execute-headless`; do not create the Automations from `$orca app-setup`.
 
-One phase advances per tick; the cron cadence is the loop. Ticks no-op once the workflow is COMPLETED or BLOCKED. Results land in **Triage**.
-
-## Step 4 — Create the HEARTBEAT automation (compensates for no event triggers)
-
-Orca can't fire *on* BLOCKED, so add a cheap poller. If `automation_update` is available, update or create an automation named `orca heartbeat`:
-
-- **Kind:** cron.
-- **Workspace:** this repo.
-- **Execution environment:** local.
-- **Schedule:** every 30 minutes.
-- **Reasoning effort:** low.
-- **Prompt:** *"Read .orca/workflows/current/status.json. If status is BLOCKED or COMPLETED, summarize it in Triage and run `bash .orca/scripts/notify.sh '<status>: <task>'`. Otherwise do nothing."*
-
-When calling the tool, put the workspace, local execution environment, schedule, status, and reasoning effort in tool fields, not in the prompt. Use an active cron schedule equivalent to "every 30 minutes" (for example `FREQ=MINUTELY;INTERVAL=30`) but do not show raw schedule strings to the user.
-
-If `automation_update` is unavailable, create it manually from `.orca/automations/heartbeat.template.json`.
-
-## Step 5 — Worktree branch (one per workflow)
+## Step 4 — Worktree branch (one per workflow)
 
 At plan time, create the workflow's worktree off the base branch and immediately use **Create branch here** → `orca/<task-slug>` (escape detached HEAD, or phase-commit SHAs get stranded). **Pin** the worktree so the 15-worktree retention can't prune a multi-day run. Phases commit sequentially to that branch; at `archive`, merge back via the Review pane (push → PR) or Handoff, then unpin.
 
-## Step 6 — Confirm and note the caveats
+## Step 5 — Confirm and note the caveats
 
-Tell the user: the execute + heartbeat Automations are set; orca will advance one audited phase per tick, mirror the active phase with `update_plan` when available, and surface BLOCKED/COMPLETED in Triage. Caveats to state plainly:
+Tell the user: Orca is installed and the app config is ready. The execute + heartbeat Automations are **not** created until `$orca execute-headless` is invoked; once enabled, they advance one audited phase per tick, mirror the active phase with `update_plan` when available, surface BLOCKED/COMPLETED in Triage, and pause themselves when the workflow completes. Caveats to state plainly:
 
 - Automations run only while the **machine is on, the app is running, and the repo is on disk** (no cloud durability). For overnight/CI runs, use the CLI phase-runner: `bash .orca/scripts/phase-runner.sh`.
 - If Orca doesn't appear in the app's **Plugins** sidebar (known bug #16783), it still works — invoke `$orca …` from the composer.

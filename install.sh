@@ -124,6 +124,6 @@ echo
 echo "✓ orca installed."
 echo "  Skills:   codex plugin marketplace add RyanYahya/orca && codex plugin add orca@orca"
 echo "  Plan:     \$orca plan <task>"
-echo "  App:      \$orca app-setup   (desktop Automations + worktree)"
+echo "  App:      \$orca app-setup   (desktop config + worktree; \$orca execute-headless enables Automations)"
 echo "  CLI run:  bash .orca/scripts/phase-runner.sh"
 echo "  Codex will ask to trust this project on first use — approve it so .codex/config.toml loads."

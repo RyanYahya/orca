@@ -13,7 +13,7 @@ Interrogate the task until the plan would have no load-bearing unknowns. Ask one
 - **Decisions** — surface real forks now; keep the question and recommended answer in the interview notes, then record them with `add-decision.sh` after the workflow is initialized.
 - **Domain/docs** — if the task introduces project-specific terms or durable trade-offs, check whether the repo already uses `CONTEXT.md`, `CONTEXT-MAP.md`, or `docs/adr/`; plan updates to those docs when they exist and the choice is worth preserving.
 
-For every question, provide your recommended answer. If the answer can be found by exploring the codebase, explore instead of asking.
+For every question, provide your recommended answer and use `references/human-input.md` when Codex exposes `request_user_input`. If the answer can be found by exploring the codebase, explore instead of asking.
 
 Stop interviewing when you could write the Assumptions block with mostly `[verified]` items and no hidden forks.
 
